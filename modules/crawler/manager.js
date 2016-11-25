@@ -1,33 +1,22 @@
 'use strict';
 let sub = require($ROOT + './store').Redis.sub;
-let pm2= Promise.promisifyAll(require('pm2'));
-// let pm2 = require('pm2');
+let pub = require($ROOT + './store').Redis.client;
 
 let manager = function(){
-    sub.subscribe('schedule').then((res) => {
-        console.log('subscribe schedule ok. sub num:' + res);
+    let keyName = '__keyevent@0__:expired';
+    sub.subscribe(keyName).then((channel, message) => {
+        if(message.)
     }).catch((err) => {
         console.error('subscribe schedule error:' + JSON.stringify(err));
     });
 
     sub.on('message', function (channel, message) {
-        switch (channel) {
-            case 'schedule':
-                break;
-            default:
-                console.log('Receive message %s from channel %s', message, channel);
-                break;
-        }
+        pub.publish()
     });
 
-    pm2.connect().then(pm2.launchBus())
-    pm2.list(function(err, res){
-
-    });
-
-    pm2.sendDataToProcessId
 
     return {
+        pub: pub,
         sub: sub
     }
 };
