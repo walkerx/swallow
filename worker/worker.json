@@ -1,0 +1,15 @@
+{
+  "name": "worker",
+  "cwd": "/Users/walker/develop/github/swallow/modules/crawler/",
+  "script": "worker.js",
+  "instances": "4",
+  "exec_mode": "cluster_mode",
+  "error_file": "logs/app.err.log",
+  "out_file": "logs/app.out.log",
+  "log_date_format": "YYYY-MM-DD HH:mm Z",
+  "pmx": false,
+  "watch": false,
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
