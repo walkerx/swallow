@@ -3,11 +3,9 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
-/**
- * 项目所涉及到的标签
- */
 let GirlTagsSchema = new Schema({
     name: {type: String, require: true},        // 标签名称
+    eName: {type: String},
     children: [{type: String}],                 //子标签名
     albumNum: {type: Number, default: 0},       //该专辑的贴士数量
     grade: {type: Number, default: 1, require: true}, //标签层级 从1开始
@@ -17,5 +15,4 @@ let GirlTagsSchema = new Schema({
     created_at: {type: Date}                    // 创建时间
 }, {autoIndex: false});
 
-//mongoose.model('GirlTags', GirlTagsSchema);
 module.exports = GirlTagsSchema;

@@ -6,7 +6,7 @@ let utils = require($ROOT + '/lib/utils');
 
 let mongo = function (conf) {
     let instance = {connections: {}};
-    for (var db in conf) {
+    for (let db in conf) {
         if (conf.hasOwnProperty(db)) {
             let uri = 'mongodb://' + conf[db].host + ':' + conf[db].port + '/' + conf[db].db;
             let connection = mongoose.createConnection(uri, {

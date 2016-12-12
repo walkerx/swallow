@@ -11,10 +11,11 @@ Mongo.config(conf);
 Modules.init(conf.modules);
 
 let errLog = function(err){
-    Mongo.Log.create({app: 'worker:' + workerId, text: err.message}).exec(function(err){
+    Mongo.Log.create({app: 'worker:' + workerId, text: err.message}, function(err, doc){
         if(err){
             console.log(err.message);
         }
+        process.exit();
     });
 };
 
@@ -30,7 +31,6 @@ let cursor = Mongo.Queue.find({workerId: workerId}).lean(true).tailable(true, {a
 
 //data   module模块名称   任务名称
 cursor.on('data', function (data) {
-    //console.log(data);
     if(!data.module){
         console.error('error: data.module not exist');
     }
@@ -39,6 +39,7 @@ cursor.on('data', function (data) {
 
 cursor.on('end', function () {
     console.log('end');
+    process.exit();
 });
 
 cursor.on('error', errLog);

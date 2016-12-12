@@ -6,6 +6,7 @@ let Schema = mongoose.Schema;
 let GirlAlbumSchema = new Schema({
     iSiteId: {type: Number},        // 自定义的网站id
     albumId: {type: String, index:true},
+    meta: {}, //存各个不同站点的信息
     site: {type: String},           // 所属网站url
     name: {type: String},           // 专辑名称
     tag: [{type: String}],          // 专辑标签
@@ -18,5 +19,4 @@ let GirlAlbumSchema = new Schema({
     update_at: {type: Date, default: Date.now}        // 修改时间
 }, {autoIndex: false, versionKey: false });
 
-// mongoose.model('GirlAlbum', GirlAlbumSchema);
 module.exports = GirlAlbumSchema;
