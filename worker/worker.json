@@ -1,8 +1,8 @@
 {
   "name": "worker",
-  "cwd": "/Users/walker/develop/github/swallow/modules/crawler/",
+  "cwd": "/Users/walker/develop/github/swallow/worker/",
   "script": "worker.js",
-  "instances": "4",
+  "instances": "1",
   "exec_mode": "cluster_mode",
   "error_file": "logs/app.err.log",
   "out_file": "logs/app.out.log",

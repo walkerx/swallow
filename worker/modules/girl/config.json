@@ -1,0 +1,28 @@
+{
+  "jobs": [
+    "mm131",
+    "zngirls"
+  ],
+  "mm131": {
+    "iSiteId": 1,
+    "url": "http://www.mm131.com/",
+    "cates": [
+      {"name": "性感美女", "ename": "xinggan", "cateId": "6", "iTags": ["性感","热门"],"more":false},
+      {"name": "青纯美女", "ename": "qingchun", "cateId": "1", "iTags": ["清纯","热门"],"more":false},
+      {"name": "美女校花", "ename": "xiaohua", "cateId": "2", "iTags": ["学生","热门"],"more":false},
+      {"name": "性感车模", "ename": "chemo", "cateId": "3", "iTags": ["性感","模特","热门"],"more":false},
+      {"name": "旗袍美女", "ename": "qipao", "cateId": "4", "iTags": ["制服","热门"],"more":false},
+      {"name": "明星写真", "ename": "mingxing", "cateId": "5", "iTags":["模特","热门"],"more":false}
+    ]
+  },
+  "zngirls": {
+    "iSiteId": 2,
+    "url": "http://www.zngirls.com",
+    "cates": [
+      {"name": "内地", "ename": "neidi", "iTags": ["内地","热门"],"allNum":15,"more":false},
+      {"name": "台湾", "ename": "taiwan", "iTags": ["台湾","热门"],"allNum":15,"more":false},
+      {"name": "日本", "ename": "riben", "iTags": ["日本","热门"],"allNum":15,"more":false},
+      {"name": "亚洲", "ename": "yazhou", "iTags": ["亚洲","热门"],"allNum":7,"more":false}
+    ]
+  }
+}

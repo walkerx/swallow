@@ -9,7 +9,7 @@ let RawSchema = new Schema({
     category: {type: String},
     dataType: {type: String},
     data: {type: String},
-    updatedAt: {type: Date}                  // 修改时间
+    updatedAt: {type: Date, default: Date.now}                  // 修改时间
 }, {capped: {size: 1048576, max: 100000, autoIndexId: true}});
 
 module.exports = RawSchema;

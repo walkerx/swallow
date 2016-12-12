@@ -8,7 +8,7 @@ let QueueSchema = new Schema({
     workerId: {type: Number},
     module: {type: String},
     message: {},
-    updatedAt: {type: Date}                  // 修改时间
-}, {capped: {size: 1024, max: 10000, autoIndexId: true}});
+    updatedAt: {type: Date, default: Date.now}                  // 修改时间
+}, {capped: {size: 10240, max: 10000, autoIndexId: true}});
 
 module.exports = QueueSchema;
