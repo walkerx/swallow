@@ -165,7 +165,7 @@ let run = function (message) {
             break;
         case 'toQiNiu':
             // toQiNiu(message.category);
-            generateUrl();
+            //generateUrl();
             break;
     }
 };

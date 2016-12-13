@@ -19,11 +19,21 @@ let create = (req, res, next) => {
     return res.json({ result : 1});
 };
 
+let generateCategory = (req, res, next) => {
+    db.GirlCategory.save().then((tags) => {
+        return res.json({result: 1, data: tags});
+    }).catch((err) => {
+        next(err)
+    });
+    return res.json({ result : 1});
+};
 
 module.exports = function (router) {
 
     //获取标签列表
     // router.get('/create', create);
     router.get('/', list);
-    router.get('/test', create);
+    //router.get('/test', create);
+
+    router.get('/test', generateCategory);
 };
