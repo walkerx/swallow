@@ -8,10 +8,10 @@ let async = require('async');
 let conf = require('./config.json');
 let Mongo = require($ROOT + '/mongo');
 let baseUrl= 'http://www.mm131.com/';
+let iSiteId= 1;
 let options = {
     headers: {
-        'User-Agent': 'request',
-        'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6'
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
     },
     encoding: null,
     transform: autoParse
@@ -130,6 +130,33 @@ let toQiNiu = function (category) {
     })
 };
 
+let generateUrl = function(){
+    Mongo.GirlAlbum.find({iSiteId: iSiteId, status: 4}).then((albums) => {
+        let list = albums.map((album, index) => {
+            return function (cb) {
+                album.pics = [];
+                for (let i = 1; i <= album.picNum; i++) {
+                    let url = 'http://7xfd4o.kuiyinapp.com/' + album.albumId + '_' + i + '.jpg';
+                    album.pics.push(url);
+                }
+                album.save(function(err, result){
+                    if(err){
+                        cb(err);
+                    }else{
+                        cb(null, result);
+                    }
+                });
+            }
+        });
+        async.parallelLimit(list, 2, function (err, result) {
+            if (err) {
+                console.error(JSON.stringify(err));
+            }
+            console.log('finish');
+        })
+    });
+};
+
 let run = function (message) {
 
     switch (message.cmd) {
@@ -137,7 +164,8 @@ let run = function (message) {
             fetch(message.category);
             break;
         case 'toQiNiu':
-            toQiNiu(message.category);
+            // toQiNiu(message.category);
+            generateUrl();
             break;
     }
 };

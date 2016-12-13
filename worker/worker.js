@@ -2,7 +2,6 @@
 
 global.$ROOT = __dirname;
 let workerId = process.env.NODE_APP_INSTANCE;
-//let workerId = 1;
 let conf = require('./config.json');
 let Mongo = require('./mongo');
 let Modules = require('./modules');
@@ -16,14 +15,6 @@ let errLog = function(err){
             console.log(err.message);
         }
         process.exit();
-    });
-};
-
-let saveRaw = function(result, data){
-    Mongo.Raw.create({workerId: workerId, module: data.module, dataType: data.dataType, data: result}).exec(function(err){
-        if(err){
-            console.error(err.message);
-        }
     });
 };
 

@@ -9,8 +9,8 @@ let iSiteId = 2;
 let baseUrl = 'http://www.zngirls.com/';
 let options = {
     headers: {
-        'User-Agent': 'request',
-        'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6'
+        // 'Referer': 'http://www.zngirls.com/g/21316/',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:50.0) Gecko/20100101 Firefox/50.0'
     },
     transform: function (body, response, resolveWithFullResponse) {
         return cheerio.load(body);
@@ -60,8 +60,8 @@ let getTotalPage = function () {
 let fetch = function () {
     getTotalPage().then((count) => {
         console.log(count);
-        async.timesLimit(638 - 560, 5, (n, next) => {
-            n = n + 560;
+        async.timesLimit(count, 5, (n, next) => {
+            n = n + 1;
             if (n === 1) {
                 options.url = 'http://m.zngirls.com/gallery/';
             } else {
@@ -70,10 +70,11 @@ let fetch = function () {
             request(options).then(getAlbumsPerPage(function(err, result){
                 if(err){
                     console.log('error:' + n);
-                    next(err, result);
+                    return next(err, result);
+                } else {
+                    console.log('finish:' + n);
+                    return next(null, result);
                 }
-                console.log('finish:' + n);
-                next(null, result);
             }));
         }, function (err, result) {
             if (err) {
@@ -86,20 +87,34 @@ let fetch = function () {
     });
 };
 
-let toQiNiu = function (category) {
-    Mongo.GirlAlbum.find({iSiteId: iSiteId, tag: category, status: 0}).lean(true).then((albums) => {
-        let list = albums.map((album) => {
+let toQiNiu = function () {
+    Mongo.GirlAlbum.find({iSiteId: iSiteId, status: 0}).lean(true).then((albums) => {
+        let list = albums.map((album, index) => {
             return function (cb) {
-                async.timesLimit(album.picNum, 5, (n, next) => {
+                async.timesLimit(album.picNum - 1, 5, (n, next) => {
                     n = n + 1;
-                    let id = album.albumId;
-                    if (album.albumId.length === 1) {
-                        id = '0' + album.albumId;
+                    let id = album.albumId, picId = '';
+                    if (n < 10) {
+                        picId = '00' + n;
+                    }else if(n < 100 && n >= 10){
+                        picId = '0' + n;
                     }
-                    options.url = 'http://img1.mm131.com/pic/' + id + '/' + n + '.jpg';
-                    upload(request(options.url), album.albumId + '_' + n + '.jpg', next);
+                    options.headers.Referer = 'http://www.zngirls.com/g/' + album.albumId + '/';
+                    options.url = 'http://t1.zngirls.com/gallery/' + album.meta.girlId + '/' + id + '/s/' + picId + '.jpg';
+                    upload(request(options), 'zn' + iSiteId + '/' +album.meta.girlId + '/' + album.albumId + '_' + n + '.jpg', next);
                 }, function (err, result) {
-                    Mongo.GirlAlbum.update({iSiteId: iSiteId, albumId: album.albumId}, {status: 4}, cb);
+                    if(err) {
+                       cb(err);
+                    }else {
+                        Mongo.GirlAlbum.update({iSiteId: iSiteId, albumId: album.albumId}, {status: 4}, function(err, result){
+                            if(err){
+                                cb(err);
+                            }else{
+                                console.log('finish:' + index);
+                                cb(null, result);
+                            }
+                        });
+                    }
                 })
             }
         });
@@ -112,6 +127,33 @@ let toQiNiu = function (category) {
     })
 };
 
+let generateUrl = function(){
+    Mongo.GirlAlbum.find({iSiteId: iSiteId, status: 4}).then((albums) => {
+        let list = albums.map((album, index) => {
+            return function (cb) {
+                album.pics = [];
+                for (let i = 1; i <= album.picNum - 1; i++) {
+                    let url = 'http://7xfd4o.kuiyinapp.com/zn2/' + album.meta.girlId + '/' + album.albumId + '_' + i + '.jpg';
+                    album.pics.push(url);
+                }
+                album.save(function(err, result){
+                    if(err){
+                       cb(err);
+                    }else{
+                        cb(null, result);
+                    }
+                });
+            }
+        });
+        async.parallelLimit(list, 2, function (err, result) {
+            if (err) {
+                console.error(JSON.stringify(err));
+            }
+            console.log('finish');
+        })
+    });
+};
+
 let run = function (message) {
 
     switch (message.cmd) {
@@ -119,7 +161,8 @@ let run = function (message) {
             fetch();
             break;
         case 'toQiNiu':
-            toQiNiu(message.category);
+            //toQiNiu();
+            generateUrl();
             break;
     }
 };

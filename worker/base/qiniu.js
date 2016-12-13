@@ -6,8 +6,6 @@ qiniu.conf.SECRET_KEY = '1z6FK0JMzjKZqQBRfA0Lttd3Ea0dO6K8VHF08RXh';
 
 let bucket = 'iosthermal';
 
-//key = 'my-nodejs-logo.png';
-
 function uptoken(bucket, key) {
     let putPolicy = new qiniu.rs.PutPolicy(bucket+":"+key);
     return putPolicy.token();
